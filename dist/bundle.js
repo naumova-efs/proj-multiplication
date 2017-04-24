@@ -93,9 +93,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var MultiPOC = (function (_super) {
-    __extends(MultiPOC, _super);
-    function MultiPOC(props) {
+var MultiplyTest = (function (_super) {
+    __extends(MultiplyTest, _super);
+    function MultiplyTest(props) {
         var _this = _super.call(this, props) || this;
         _this.operator1 = "2";
         _this.operator2 = "2";
@@ -108,28 +108,30 @@ var MultiPOC = (function (_super) {
         _this.isStartButtonVisible = true;
         _this.isNextButtonVisible = false;
         _this.resultFontColour = 'grey';
-        _this.arrayForOperator1 = [2, 3, 4];
+        _this.checkBoxesSelected = new Array(10);
+        _this._handleKeyPressDuration = function (e) {
+            if (e.key === 'Enter') {
+                console.log("Duration set: " + _this.durationSec.value + " sec");
+            }
+        };
         _this._handleKeyPress = function (e) {
             if (e.key === 'Enter') {
-                console.log('do validate');
-                console.info(_this.operator1 + '*' + _this.operator2);
                 _this.result = Number(_this.operator1) * Number(_this.operator2);
-                var isCorrect = _this.result == Number(_this.inputValue.value);
+                var isCorrect = _this.result == Number(_this.textInput.value);
                 _this.assesmentText = isCorrect ? 'GOOD - click Next to continue' : 'BAD - correct your result';
                 _this.numberTotalAnswers++;
                 if (isCorrect) {
                     _this.numberOfGoodAnswers++;
                     _this.isNextButtonVisible = true;
+                    _this.nextButton.focus();
                     _this.resultFontColour = 'green';
                 }
                 else {
                     _this.numberOfBadAnswers++;
                     _this.isNextButtonVisible = false;
                     _this.resultFontColour = 'red';
+                    //this.textInput.focus();
                 }
-                console.info(_this.inputValue.value);
-                console.info(_this.result);
-                console.info(isCorrect ? 'GOOD' : 'BAD');
                 _this.setState({
                     result: _this.result,
                     assesmentText: _this.assesmentText,
@@ -142,14 +144,35 @@ var MultiPOC = (function (_super) {
             }
         };
         _this.state = {
-            arrayForOperator1: _this.props.arrayForOperator1,
             testTimeSec: _this.props.testTimeSec
         };
         return _this;
     }
-    MultiPOC.prototype.render = function () {
+    MultiplyTest.prototype.render = function () {
         var _this = this;
         return React.createElement("div", null,
+            React.createElement("fieldset", { style: { fontSize: "120%" } },
+                React.createElement("legend", null, " Coose multiplicant values for the test"),
+                React.createElement("div", null,
+                    React.createElement("span", { className: this.checkBoxSelectedFor2 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor2.bind(this) }, "2")),
+                React.createElement("div", null,
+                    React.createElement("span", { className: this.checkBoxSelectedFor3 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor3.bind(this) }, "3")),
+                React.createElement("div", null,
+                    React.createElement("span", { className: this.checkBoxSelectedFor4 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor4.bind(this) }, "4")),
+                React.createElement("div", null,
+                    React.createElement("span", { className: this.checkBoxSelectedFor5 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor5.bind(this) }, "5")),
+                React.createElement("div", null,
+                    React.createElement("span", { className: this.checkBoxSelectedFor6 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor6.bind(this) }, "6")),
+                React.createElement("div", null,
+                    React.createElement("span", { className: this.checkBoxSelectedFor7 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor7.bind(this) }, "7")),
+                React.createElement("div", null,
+                    React.createElement("span", { className: this.checkBoxSelectedFor8 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor8.bind(this) }, "8")),
+                React.createElement("div", null,
+                    React.createElement("span", { className: this.checkBoxSelectedFor9 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor9.bind(this) }, "9")),
+                React.createElement("div", null,
+                    React.createElement("span", { style: { margin: '2%' } }, " Test duration is:"),
+                    React.createElement("input", { type: "number", name: "durationSec", ref: function (input) { return _this.durationSec = input; }, onKeyPress: this._handleKeyPressDuration.bind(this), style: { height: '30px', width: '60px' } }),
+                    React.createElement("span", { style: { margin: '2%' } }, "sec"))),
             React.createElement("div", { style: { visibility: this.isStartButtonVisible ? 'visible' : 'hidden' } },
                 React.createElement("button", { id: "startButton", type: "button", className: "btn btn-primary btn-md btn-block", onClick: this.startClicked.bind(this) }, "Start Test")),
             React.createElement("div", { style: { visibility: !this.isStartButtonVisible ? 'visible' : 'hidden' } },
@@ -158,8 +181,8 @@ var MultiPOC = (function (_super) {
                     React.createElement("span", { style: { margin: '1%' } }, this.operationSymbol),
                     React.createElement("span", { style: { margin: '1%' } }, this.operator2),
                     React.createElement("span", { style: { margin: '1%' } }, "="),
-                    React.createElement("input", { type: "number", name: "inputValue", ref: function (input) { return _this.inputValue = input; }, onKeyPress: this._handleKeyPress.bind(this), size: 3, style: { height: '60px', width: '120px' } }),
-                    React.createElement("button", { id: "nextButton", type: "button", style: { visibility: this.isNextButtonVisible ? 'visible' : 'hidden', marginLeft: '4%' }, className: "btn btn-lg", onClick: this.nextClicked.bind(this) }, "Next")),
+                    React.createElement("input", { type: "number", name: "inputValue", ref: function (input) { return _this.textInput = input; }, onKeyPress: this._handleKeyPress.bind(this), size: 3, style: { height: '60px', width: '120px' } }),
+                    React.createElement("button", { id: "nextButton", type: "button", style: { visibility: this.isNextButtonVisible ? 'visible' : 'hidden', marginLeft: '4%' }, className: "btn btn-lg", onClick: this.nextClicked.bind(this), ref: function (thisButton) { _this.nextButton = thisButton; } }, "Next")),
                 React.createElement("div", { style: { fontSize: "250%" } },
                     React.createElement("span", { style: { marginRight: '1%', color: this.resultFontColour } }, this.assesmentText))),
             React.createElement("div", null,
@@ -169,44 +192,51 @@ var MultiPOC = (function (_super) {
                     " Bad:",
                     this.numberOfBadAnswers)));
     };
-    MultiPOC.prototype.nextClicked = function () {
+    MultiplyTest.prototype.nextClicked = function () {
         //this.operator1 = String(this.getRandom2To10());
         this.operator1 = String(this.getRandomFromArray(this.arrayForOperator1));
         this.operator2 = String(this.getRandom2To9());
-        this.inputValue.value = '';
+        this.textInput.value = '';
         this.assesmentText = '';
         this.isNextButtonVisible = false;
+        this.textInput.focus();
         this.setState({
             operator1: this.operator1,
             operator2: this.operator2,
             assesmentText: this.assesmentText,
-            inputValue: this.inputValue,
+            inputValue: this.textInput,
             isNextButtonVisible: this.isNextButtonVisible
         });
     };
-    MultiPOC.prototype.startClicked = function () {
+    MultiplyTest.prototype.startClicked = function () {
         this.isTestVisible = true;
         this.isStartButtonVisible = false;
         this.numberOfGoodAnswers = 0;
         this.numberOfBadAnswers = 0;
         this.numberTotalAnswers = 0;
+        this.arrayForOperator1 = [];
+        for (var i = 2; i <= this.checkBoxesSelected.length; i++) {
+            if (this.checkBoxesSelected[i])
+                this.arrayForOperator1.push(i);
+        }
         this.operator1 = String(this.getRandomFromArray(this.arrayForOperator1));
         this.operator2 = String(this.getRandom2To9());
-        this.inputValue.value = '';
+        this.textInput.value = '';
         this.assesmentText = 'Type result and press Enter';
+        this.textInput.focus();
         this.setState({
             operator1: this.operator1,
             operator2: this.operator2,
             assesmentText: this.assesmentText,
-            inputValue: this.inputValue,
+            inputValue: this.textInput,
             numberOfGoodAnswers: this.numberOfGoodAnswers,
             numberOfBadAnswers: this.numberOfBadAnswers,
             isTestVisible: this.isTestVisible,
-            isStartButtonVisible: this.isStartButtonVisible
+            isStartButtonVisible: this.isStartButtonVisible,
         });
-        setTimeout(this.endOfTestTime.bind(this), 40000);
+        setTimeout(this.endOfTestTime.bind(this), Number(this.durationSec.value) * 1000);
     };
-    MultiPOC.prototype.endOfTestTime = function () {
+    MultiplyTest.prototype.endOfTestTime = function () {
         //this.isTestVisible = false;
         console.info('endOfTestTime(): ');
         this.isStartButtonVisible = true;
@@ -216,7 +246,7 @@ var MultiPOC = (function (_super) {
             isNextButtonVisible: this.isNextButtonVisible
         });
     };
-    MultiPOC.prototype.getRandom2To9 = function () {
+    MultiplyTest.prototype.getRandom2To9 = function () {
         return Math.floor(Math.random() * 8) + 2;
         /*while(1===1){
             result= Math.floor(Math.random()*10 +1);
@@ -227,19 +257,60 @@ var MultiPOC = (function (_super) {
                 continue;
         }*/
     };
-    MultiPOC.prototype.getRandomFromArray = function (arrayToChooseFrom) {
+    MultiplyTest.prototype.getRandomFromArray = function (arrayToChooseFrom) {
+        console.log("array to choose operator1 is:" + arrayToChooseFrom.toString());
         var length = arrayToChooseFrom.length;
         // Math.floor(Math.random() * (max - min + 1)) + min;Returns a random integer between min (inclusive) and max (inclusive)
         var randomIndex = Math.floor(Math.random() * length);
         console.log("radomIndex = " + randomIndex);
         return arrayToChooseFrom[randomIndex];
     };
-    MultiPOC.prototype.setArrayForOperator1 = function (arrayToSet) {
+    MultiplyTest.prototype.setArrayForOperator1 = function (arrayToSet) {
         this.arrayForOperator1 = arrayToSet;
     };
-    return MultiPOC;
+    MultiplyTest.prototype.cbClickedFor2 = function () {
+        this.checkBoxSelectedFor2 = !this.checkBoxSelectedFor2;
+        this.checkBoxesSelected[2] = this.checkBoxSelectedFor2;
+        this.setState({ checkBoxSelectedFor2: this.checkBoxSelectedFor2 });
+    };
+    MultiplyTest.prototype.cbClickedFor3 = function () {
+        this.checkBoxSelectedFor3 = !this.checkBoxSelectedFor3;
+        this.checkBoxesSelected[3] = this.checkBoxSelectedFor3;
+        this.setState({ checkBoxSelectedFor3: this.checkBoxSelectedFor3 });
+    };
+    MultiplyTest.prototype.cbClickedFor4 = function () {
+        this.checkBoxSelectedFor4 = !this.checkBoxSelectedFor4;
+        this.checkBoxesSelected[4] = this.checkBoxSelectedFor4;
+        this.setState({ checkBoxSelectedFor4: this.checkBoxSelectedFor4 });
+    };
+    MultiplyTest.prototype.cbClickedFor5 = function () {
+        this.checkBoxSelectedFor5 = !this.checkBoxSelectedFor5;
+        this.checkBoxesSelected[5] = this.checkBoxSelectedFor5;
+        this.setState({ checkBoxSelectedFor5: this.checkBoxSelectedFor5 });
+    };
+    MultiplyTest.prototype.cbClickedFor6 = function () {
+        this.checkBoxSelectedFor6 = !this.checkBoxSelectedFor6;
+        this.checkBoxesSelected[6] = this.checkBoxSelectedFor6;
+        this.setState({ checkBoxSelectedFor6: this.checkBoxSelectedFor6 });
+    };
+    MultiplyTest.prototype.cbClickedFor7 = function () {
+        this.checkBoxSelectedFor7 = !this.checkBoxSelectedFor7;
+        this.checkBoxesSelected[7] = this.checkBoxSelectedFor7;
+        this.setState({ checkBoxSelectedFor7: this.checkBoxSelectedFor7 });
+    };
+    MultiplyTest.prototype.cbClickedFor8 = function () {
+        this.checkBoxSelectedFor8 = !this.checkBoxSelectedFor8;
+        this.checkBoxesSelected[8] = this.checkBoxSelectedFor8;
+        this.setState({ checkBoxSelectedFor8: this.checkBoxSelectedFor8 });
+    };
+    MultiplyTest.prototype.cbClickedFor9 = function () {
+        this.checkBoxSelectedFor9 = !this.checkBoxSelectedFor9;
+        this.checkBoxesSelected[9] = this.checkBoxSelectedFor9;
+        this.setState({ checkBoxSelectedFor9: this.checkBoxSelectedFor9 });
+    };
+    return MultiplyTest;
 }(React.Component));
-exports.MultiPOC = MultiPOC;
+exports.MultiplyTest = MultiplyTest;
 
 
 /***/ }),
@@ -259,83 +330,8 @@ module.exports = ReactDOM;
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 var ReactDOM = __webpack_require__(2);
-var MultiPOC_1 = __webpack_require__(1);
-var TestSetForm_1 = __webpack_require__(4);
-//let myProps : MultiPOCProps = {operator1: '8', operator2:'9', operationSymbol: '*'};
-ReactDOM.render(React.createElement(MultiPOC_1.MultiPOC, { arrayForOperator1: [2, 3, 4, 5], testTimeSec: 30 }), document.getElementById("multitest"));
-ReactDOM.render(React.createElement(TestSetForm_1.TestSetForm, { testTimeSec: 60 }), document.getElementById("testSettings"));
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Created by lena on 2017-04-09.
- */
-var React = __webpack_require__(0);
-var TestSetForm = (function (_super) {
-    __extends(TestSetForm, _super);
-    function TestSetForm(props) {
-        var _this = _super.call(this, props) || this;
-        _this.state = {
-            testTimeSec: _this.props.testTimeSec
-        };
-        _this.handleChange = _this.handleChange.bind(_this);
-        _this.handleSubmit = _this.handleSubmit.bind(_this);
-        return _this;
-    }
-    TestSetForm.prototype.handleChange = function (event) {
-        this.setState({ testTimeSec: event.target.testTimeSec });
-    };
-    TestSetForm.prototype.handleSubmit = function (event) {
-        alert('Test time was submitted: ' + String(this.state.testTimeSec));
-        event.preventDefault();
-    };
-    TestSetForm.prototype.render = function () {
-        return (React.createElement("form", { onSubmit: this.handleSubmit },
-            React.createElement("label", null,
-                "Test Duration in Seconds:",
-                React.createElement("input", { type: "number", value: this.state.testTimeSec, onChange: this.handleChange.bind(this) })),
-            React.createElement("input", { type: "submit", value: "Update test parameters ", className: "btn btn-primary btn-md btn-block" })));
-    };
-    return TestSetForm;
-}(React.Component));
-exports.TestSetForm = TestSetForm;
-/*
- <p>Set test duration in seconds:</p>
- <form>
- <h3>Select values for multiplier: </h2>
- <div class="checkbox">
- <label><input type="checkbox" value="">2</label>
- </div>
- <div class="checkbox">
- <label><input type="checkbox" value="">3</label>
- </div>
- <div class="checkbox disabled">
- <label><input type="checkbox" value="" disabled>Option 3</label>
- </div>
- <label>
- Name:
- <input type="text" name="name" />
- </label>
-
-
- <input type="submit" value="Submit" />
- </form>*/ 
+var MultiplyTest_1 = __webpack_require__(1);
+ReactDOM.render(React.createElement(MultiplyTest_1.MultiplyTest, { testTimeSec: 30 }), document.getElementById("multitest"));
 
 
 /***/ })
