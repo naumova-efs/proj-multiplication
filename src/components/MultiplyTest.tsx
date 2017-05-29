@@ -13,7 +13,6 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
     private result: number;
 
     private textInput: any;
-    private nextButton: any;
 
     private operationSymbol: string = "x";
     private assesmentText: string = "";
@@ -25,7 +24,8 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
 
     private isTestVisible : boolean = false;
     private isStartButtonVisible : boolean = true;
-    private isNextButtonVisible = false;
+
+    private isTimeForNextTask : boolean = false;
     private resultFontColour:string = 'grey';
 
     private checkBoxesSelected:boolean[]  = new Array(10);
@@ -41,7 +41,10 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
 
 
     private arrayForOperator1:any[8];
-    private durationSec:any;
+    //private durationSec:any;
+
+    private tasksNumberInput:any;
+    private tasksNumber:number;
 
 
     constructor(props:MultiPOCProps) {
@@ -92,14 +95,14 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
               </div>
 
               <div >
-                  <span style={{margin:'2%'}}> Test duration is:</span>
-                  <input type="number" name="durationSec"
-                         ref={(input)=> this.durationSec = input}
-                         onKeyPress={this._handleKeyPressDuration.bind(this)}
+                  <span style={{margin:'2%'}}> Number of tasks in test :</span>
+                  <input type="number" name="tasksNumber"
+                         ref={(input)=> this.tasksNumberInput = input}
+                         onKeyPress={this._handleKeyPressTasksNumber.bind(this)}
                          style={{ height: '30px', width: '60px'}}
 
                   />
-                  <span style={{margin:'2%'}}>sec</span>
+
               </div>
 
           </fieldset>
@@ -131,11 +134,7 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
                              style={{ height: '60px', width: '120px'}}
 
                       />
-                     <button id="nextButton" type="button"
-                            style= {{visibility: this.isNextButtonVisible ? 'visible':'hidden', marginLeft: '4%'}} className="btn btn-lg"
-                            onClick={this.nextClicked.bind(this)}
-                            ref={(thisButton)=>{this.nextButton = thisButton}}>Next
-                     </button>
+
                  </div>
 
                  <div style={{fontSize:"250%"}}>
@@ -151,30 +150,32 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
 
          </div>
     }
-   public _handleKeyPressDuration = (e:any) => {
+   public _handleKeyPressTasksNumber = (e:any) => {
        if (e.key === 'Enter') {
-           console.log("Duration set: "+this.durationSec.value + " sec");
+           console.log("Tasks Number: "+this.tasksNumberInput.value );
        }
    };
 
    public _handleKeyPress = (e:any) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !this.isTimeForNextTask) {
+            console.info("1 Enter");
             this.result = Number(this.operator1) * Number(this.operator2);
             let isCorrect:boolean = this.result == Number(this.textInput.value);
-            this.assesmentText = isCorrect ? 'GOOD - click Next to continue' : 'BAD - correct your result';
+            this.assesmentText = isCorrect ? 'GOOD - press Enter to continue' : 'BAD - correct your result';
             this.numberTotalAnswers++;
             if(isCorrect) {
                 this.numberOfGoodAnswers++;
-                this.isNextButtonVisible = true;
-                this.nextButton.focus();
+                this.isTimeForNextTask = true;
                 this.resultFontColour = 'green';
-
             }
             else {
                 this.numberOfBadAnswers++;
-                this.isNextButtonVisible = false;
+                if(this.numberTotalAnswers == this.tasksNumber) {
+                    this.endOfTestTime();
+                }
+
+                this.isTimeForNextTask = false;
                 this.resultFontColour = 'red';
-                 //this.textInput.focus();
             }
 
             this.setState({
@@ -182,22 +183,32 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
                     assesmentText: this.assesmentText,
                     numberOfGoodAnswers: this.numberOfGoodAnswers,
                     numberOfBadAnswers: this.numberOfBadAnswers,
-                    isNextButtonVisible: this.isNextButtonVisible,
                     resultFontColour: this.resultFontColour
                 }
 
             );
             console.info(this.assesmentText);
+        } else if (e.key === 'Enter' && this.isTimeForNextTask){
+            console.info("2 Enter");
+            if(this.numberTotalAnswers < this.tasksNumber) {
+                this.createAndDisplayNextTask();
+
+            }else{
+                this.endOfTestTime();
+
+            }
+
         }
+       this.textInput.focus();
+
     };
 
-    public nextClicked(): void{
-        //this.operator1 = String(this.getRandom2To10());
+    public createAndDisplayNextTask(): void{
         this.operator1 = String(this.getRandomFromArray(this.arrayForOperator1));
         this.operator2 = String(this.getRandom2To9());
         this.textInput.value ='';
         this.assesmentText = '';
-        this.isNextButtonVisible = false;
+        this.isTimeForNextTask= false;
         this.textInput.focus();
 
         this.setState({
@@ -205,7 +216,7 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
             operator2: this.operator2,
             assesmentText: this.assesmentText,
             inputValue: this.textInput,
-            isNextButtonVisible: this.isNextButtonVisible
+
          }
 
         );
@@ -221,6 +232,8 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
         this.numberOfGoodAnswers = 0;
         this.numberOfBadAnswers = 0;
         this.numberTotalAnswers = 0;
+        this.isTimeForNextTask= false;
+        this.tasksNumber =  Number(this.tasksNumberInput.value);
 
         this.arrayForOperator1 = [];
 
@@ -230,9 +243,11 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
                this.arrayForOperator1.push(i);
        }
 
+
         this.operator1 = String(this.getRandomFromArray(this.arrayForOperator1));
         this.operator2 = String(this.getRandom2To9());
         this.textInput.value ='';
+
         this.assesmentText = 'Type result and press Enter';
 
         this.textInput.focus();
@@ -244,23 +259,24 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
             inputValue: this.textInput,
             numberOfGoodAnswers: this.numberOfGoodAnswers,
             numberOfBadAnswers: this.numberOfBadAnswers,
+            numberTotalAnsvers:this.numberTotalAnswers,
             isTestVisible: this.isTestVisible,
             isStartButtonVisible: this.isStartButtonVisible,
+            tasksNumber:this.tasksNumber
 
 
         });
-             setTimeout(this.endOfTestTime.bind(this),Number(this.durationSec.value)*1000);
+             //setTimeout(this.endOfTestTime.bind(this),Number(this.durationSec.value)*1000);
     }
 
     public endOfTestTime(): void{
         //this.isTestVisible = false;
         console.info('endOfTestTime(): ');
         this.isStartButtonVisible = true;
-        this.isNextButtonVisible = false;
-
+        this.isTimeForNextTask = false;
         this.setState({
-            isStartButtonVisible: this.isStartButtonVisible,
-            isNextButtonVisible: this.isNextButtonVisible
+            isStartButtonVisible: this.isStartButtonVisible
+
         });
     }
 

@@ -106,42 +106,53 @@ var MultiplyTest = (function (_super) {
         _this.numberTotalAnswers = 0;
         _this.isTestVisible = false;
         _this.isStartButtonVisible = true;
-        _this.isNextButtonVisible = false;
+        _this.isTimeForNextTask = false;
         _this.resultFontColour = 'grey';
         _this.checkBoxesSelected = new Array(10);
-        _this._handleKeyPressDuration = function (e) {
+        _this._handleKeyPressTasksNumber = function (e) {
             if (e.key === 'Enter') {
-                console.log("Duration set: " + _this.durationSec.value + " sec");
+                console.log("Tasks Number: " + _this.tasksNumberInput.value);
             }
         };
         _this._handleKeyPress = function (e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !_this.isTimeForNextTask) {
+                console.info("1 Enter");
                 _this.result = Number(_this.operator1) * Number(_this.operator2);
                 var isCorrect = _this.result == Number(_this.textInput.value);
-                _this.assesmentText = isCorrect ? 'GOOD - click Next to continue' : 'BAD - correct your result';
+                _this.assesmentText = isCorrect ? 'GOOD - press Enter to continue' : 'BAD - correct your result';
                 _this.numberTotalAnswers++;
                 if (isCorrect) {
                     _this.numberOfGoodAnswers++;
-                    _this.isNextButtonVisible = true;
-                    _this.nextButton.focus();
+                    _this.isTimeForNextTask = true;
                     _this.resultFontColour = 'green';
                 }
                 else {
                     _this.numberOfBadAnswers++;
-                    _this.isNextButtonVisible = false;
+                    if (_this.numberTotalAnswers == _this.tasksNumber) {
+                        _this.endOfTestTime();
+                    }
+                    _this.isTimeForNextTask = false;
                     _this.resultFontColour = 'red';
-                    //this.textInput.focus();
                 }
                 _this.setState({
                     result: _this.result,
                     assesmentText: _this.assesmentText,
                     numberOfGoodAnswers: _this.numberOfGoodAnswers,
                     numberOfBadAnswers: _this.numberOfBadAnswers,
-                    isNextButtonVisible: _this.isNextButtonVisible,
                     resultFontColour: _this.resultFontColour
                 });
                 console.info(_this.assesmentText);
             }
+            else if (e.key === 'Enter' && _this.isTimeForNextTask) {
+                console.info("2 Enter");
+                if (_this.numberTotalAnswers < _this.tasksNumber) {
+                    _this.createAndDisplayNextTask();
+                }
+                else {
+                    _this.endOfTestTime();
+                }
+            }
+            _this.textInput.focus();
         };
         _this.state = {
             testTimeSec: _this.props.testTimeSec
@@ -170,9 +181,8 @@ var MultiplyTest = (function (_super) {
                 React.createElement("div", null,
                     React.createElement("span", { className: this.checkBoxSelectedFor9 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor9.bind(this) }, "9")),
                 React.createElement("div", null,
-                    React.createElement("span", { style: { margin: '2%' } }, " Test duration is:"),
-                    React.createElement("input", { type: "number", name: "durationSec", ref: function (input) { return _this.durationSec = input; }, onKeyPress: this._handleKeyPressDuration.bind(this), style: { height: '30px', width: '60px' } }),
-                    React.createElement("span", { style: { margin: '2%' } }, "sec"))),
+                    React.createElement("span", { style: { margin: '2%' } }, " Number of tasks in test :"),
+                    React.createElement("input", { type: "number", name: "tasksNumber", ref: function (input) { return _this.tasksNumberInput = input; }, onKeyPress: this._handleKeyPressTasksNumber.bind(this), style: { height: '30px', width: '60px' } }))),
             React.createElement("div", { style: { visibility: this.isStartButtonVisible ? 'visible' : 'hidden' } },
                 React.createElement("button", { id: "startButton", type: "button", className: "btn btn-primary btn-md btn-block", onClick: this.startClicked.bind(this) }, "Start Test")),
             React.createElement("div", { style: { visibility: !this.isStartButtonVisible ? 'visible' : 'hidden' } },
@@ -181,8 +191,7 @@ var MultiplyTest = (function (_super) {
                     React.createElement("span", { style: { margin: '1%' } }, this.operationSymbol),
                     React.createElement("span", { style: { margin: '1%' } }, this.operator2),
                     React.createElement("span", { style: { margin: '1%' } }, "="),
-                    React.createElement("input", { type: "number", name: "inputValue", ref: function (input) { return _this.textInput = input; }, onKeyPress: this._handleKeyPress.bind(this), size: 3, style: { height: '60px', width: '120px' } }),
-                    React.createElement("button", { id: "nextButton", type: "button", style: { visibility: this.isNextButtonVisible ? 'visible' : 'hidden', marginLeft: '4%' }, className: "btn btn-lg", onClick: this.nextClicked.bind(this), ref: function (thisButton) { _this.nextButton = thisButton; } }, "Next")),
+                    React.createElement("input", { type: "number", name: "inputValue", ref: function (input) { return _this.textInput = input; }, onKeyPress: this._handleKeyPress.bind(this), size: 3, style: { height: '60px', width: '120px' } })),
                 React.createElement("div", { style: { fontSize: "250%" } },
                     React.createElement("span", { style: { marginRight: '1%', color: this.resultFontColour } }, this.assesmentText))),
             React.createElement("div", null,
@@ -192,20 +201,18 @@ var MultiplyTest = (function (_super) {
                     " Bad:",
                     this.numberOfBadAnswers)));
     };
-    MultiplyTest.prototype.nextClicked = function () {
-        //this.operator1 = String(this.getRandom2To10());
+    MultiplyTest.prototype.createAndDisplayNextTask = function () {
         this.operator1 = String(this.getRandomFromArray(this.arrayForOperator1));
         this.operator2 = String(this.getRandom2To9());
         this.textInput.value = '';
         this.assesmentText = '';
-        this.isNextButtonVisible = false;
+        this.isTimeForNextTask = false;
         this.textInput.focus();
         this.setState({
             operator1: this.operator1,
             operator2: this.operator2,
             assesmentText: this.assesmentText,
             inputValue: this.textInput,
-            isNextButtonVisible: this.isNextButtonVisible
         });
     };
     MultiplyTest.prototype.startClicked = function () {
@@ -214,6 +221,8 @@ var MultiplyTest = (function (_super) {
         this.numberOfGoodAnswers = 0;
         this.numberOfBadAnswers = 0;
         this.numberTotalAnswers = 0;
+        this.isTimeForNextTask = false;
+        this.tasksNumber = Number(this.tasksNumberInput.value);
         this.arrayForOperator1 = [];
         for (var i = 2; i <= this.checkBoxesSelected.length; i++) {
             if (this.checkBoxesSelected[i])
@@ -231,19 +240,20 @@ var MultiplyTest = (function (_super) {
             inputValue: this.textInput,
             numberOfGoodAnswers: this.numberOfGoodAnswers,
             numberOfBadAnswers: this.numberOfBadAnswers,
+            numberTotalAnsvers: this.numberTotalAnswers,
             isTestVisible: this.isTestVisible,
             isStartButtonVisible: this.isStartButtonVisible,
+            tasksNumber: this.tasksNumber
         });
-        setTimeout(this.endOfTestTime.bind(this), Number(this.durationSec.value) * 1000);
+        //setTimeout(this.endOfTestTime.bind(this),Number(this.durationSec.value)*1000);
     };
     MultiplyTest.prototype.endOfTestTime = function () {
         //this.isTestVisible = false;
         console.info('endOfTestTime(): ');
         this.isStartButtonVisible = true;
-        this.isNextButtonVisible = false;
+        this.isTimeForNextTask = false;
         this.setState({
-            isStartButtonVisible: this.isStartButtonVisible,
-            isNextButtonVisible: this.isNextButtonVisible
+            isStartButtonVisible: this.isStartButtonVisible
         });
     };
     MultiplyTest.prototype.getRandom2To9 = function () {
