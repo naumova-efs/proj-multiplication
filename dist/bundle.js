@@ -111,7 +111,7 @@ var MultiplyTest = (function (_super) {
         _this.checkBoxesSelected = new Array(10);
         _this._handleKeyPressTasksNumber = function (e) {
             if (e.key === 'Enter') {
-                console.log("Tasks Number: " + _this.tasksNumberInput.value);
+                console.log("Tasks Number in Test: " + _this.tasksNumberInput.value);
             }
         };
         _this._handleKeyPress = function (e) {
@@ -119,7 +119,7 @@ var MultiplyTest = (function (_super) {
                 console.info("1 Enter");
                 _this.result = Number(_this.operator1) * Number(_this.operator2);
                 var isCorrect = _this.result == Number(_this.textInput.value);
-                _this.assesmentText = isCorrect ? 'GOOD - press Enter to continue' : 'BAD - correct your result';
+                _this.assesmentText = isCorrect ? 'Верно - жми Enter чтобы продолжить' : 'ОШИБКА - исправляй!';
                 _this.numberTotalAnswers++;
                 if (isCorrect) {
                     _this.numberOfGoodAnswers++;
@@ -163,7 +163,7 @@ var MultiplyTest = (function (_super) {
         var _this = this;
         return React.createElement("div", null,
             React.createElement("fieldset", { style: { fontSize: "120%" } },
-                React.createElement("legend", null, " Coose multiplicant values for the test"),
+                React.createElement("legend", null, "\u0412\u044B\u0431\u0435\u0440\u0438 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u043C\u043D\u043E\u0436\u0438\u043C\u043E\u0433\u043E"),
                 React.createElement("div", null,
                     React.createElement("span", { className: this.checkBoxSelectedFor2 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor2.bind(this) }, "2")),
                 React.createElement("div", null,
@@ -181,25 +181,28 @@ var MultiplyTest = (function (_super) {
                 React.createElement("div", null,
                     React.createElement("span", { className: this.checkBoxSelectedFor9 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked', onClick: this.cbClickedFor9.bind(this) }, "9")),
                 React.createElement("div", null,
-                    React.createElement("span", { style: { margin: '2%' } }, " Number of tasks in test :"),
+                    React.createElement("span", { style: { margin: '2%' } }, " \u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043F\u0440\u0438\u043C\u0435\u0440\u043E\u0432 \u0432 \u0442\u0435\u0441\u0442\u0435:"),
                     React.createElement("input", { type: "number", name: "tasksNumber", ref: function (input) { return _this.tasksNumberInput = input; }, onKeyPress: this._handleKeyPressTasksNumber.bind(this), style: { height: '30px', width: '60px' } }))),
             React.createElement("div", { style: { visibility: this.isStartButtonVisible ? 'visible' : 'hidden' } },
-                React.createElement("button", { id: "startButton", type: "button", className: "btn btn-primary btn-md btn-block", onClick: this.startClicked.bind(this) }, "Start Test")),
+                React.createElement("button", { id: "startButton", type: "button", className: "btn btn-primary btn-md btn-block", onClick: this.startClicked.bind(this) }, "\u041D\u0430\u0447\u043D\u0435\u043C \u0438\u0441\u043F\u044B\u0442\u0430\u043D\u0438\u0435!")),
             React.createElement("div", { style: { visibility: !this.isStartButtonVisible ? 'visible' : 'hidden' } },
-                React.createElement("div", { style: { fontSize: "500%" } },
+                React.createElement("div", { style: { fontSize: "400%" } },
                     React.createElement("span", { style: { margin: '1%' } }, this.operator1),
                     React.createElement("span", { style: { margin: '1%' } }, this.operationSymbol),
                     React.createElement("span", { style: { margin: '1%' } }, this.operator2),
                     React.createElement("span", { style: { margin: '1%' } }, "="),
-                    React.createElement("input", { type: "number", name: "inputValue", ref: function (input) { return _this.textInput = input; }, onKeyPress: this._handleKeyPress.bind(this), size: 3, style: { height: '60px', width: '120px' } })),
+                    React.createElement("input", { type: "number", name: "inputValue", ref: function (input) { return _this.textInput = input; }, onKeyPress: this._handleKeyPress.bind(this), style: { width: '120px' } })),
                 React.createElement("div", { style: { fontSize: "250%" } },
                     React.createElement("span", { style: { marginRight: '1%', color: this.resultFontColour } }, this.assesmentText))),
             React.createElement("div", null,
                 React.createElement("h4", { id: "goodScore" },
-                    " Good:",
-                    this.numberOfGoodAnswers,
-                    " Bad:",
-                    this.numberOfBadAnswers)));
+                    React.createElement("span", { style: { marginRight: '1%', color: 'green' } },
+                        " \u0412\u0435\u0440\u043D\u043E:",
+                        this.numberOfGoodAnswers,
+                        " "),
+                    React.createElement("span", { style: { marginRight: '1%', color: 'red' } },
+                        " \u041E\u0448\u0438\u0431\u043E\u043A:",
+                        this.numberOfBadAnswers))));
     };
     MultiplyTest.prototype.createAndDisplayNextTask = function () {
         this.operator1 = String(this.getRandomFromArray(this.arrayForOperator1));
@@ -231,7 +234,7 @@ var MultiplyTest = (function (_super) {
         this.operator1 = String(this.getRandomFromArray(this.arrayForOperator1));
         this.operator2 = String(this.getRandom2To9());
         this.textInput.value = '';
-        this.assesmentText = 'Type result and press Enter';
+        this.assesmentText = 'Напечатай результат и нажми Enter';
         this.textInput.focus();
         this.setState({
             operator1: this.operator1,

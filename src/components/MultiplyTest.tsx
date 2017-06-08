@@ -60,7 +60,7 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
         return<div>
 
           <fieldset style={{fontSize:"120%"}}>
-              <legend> Coose multiplicant values for the test</legend>
+              <legend>Выбери значения множимого</legend>
               <div>
                    <span className={this.checkBoxSelectedFor2 ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked'}
                          onClick={this.cbClickedFor2.bind(this)}>2</span>
@@ -95,7 +95,7 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
               </div>
 
               <div >
-                  <span style={{margin:'2%'}}> Number of tasks in test :</span>
+                  <span style={{margin:'2%'}}> Количество примеров в тесте:</span>
                   <input type="number" name="tasksNumber"
                          ref={(input)=> this.tasksNumberInput = input}
                          onKeyPress={this._handleKeyPressTasksNumber.bind(this)}
@@ -113,12 +113,12 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
             <div style={{visibility: this.isStartButtonVisible?'visible':'hidden'}} >
                 <button id="startButton" type="button"
                       className="btn btn-primary btn-md btn-block"
-                        onClick={this.startClicked.bind(this)}>Start Test
+                        onClick={this.startClicked.bind(this)}>Начнем испытание!
                 </button>
             </div>
 
             <div style={{visibility: !this.isStartButtonVisible?'visible':'hidden'}} >
-                <div style={{fontSize:"500%"}}>
+                <div style={{fontSize:"400%"}}>
                      <span style={{margin:'1%'}}>
                          {this.operator1}
                      </span>
@@ -130,8 +130,7 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
                       <input type="number" name="inputValue"
                              ref={(input)=> this.textInput = input}
                              onKeyPress={this._handleKeyPress.bind(this)}
-                             size={3}
-                             style={{ height: '60px', width: '120px'}}
+                             style={{ width: '120px'}}
 
                       />
 
@@ -144,15 +143,19 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
              </div>
 
             <div>
-                <h4 id= "goodScore" > Good:{this.numberOfGoodAnswers} Bad:{this.numberOfBadAnswers}</h4>
+                <h4 id= "goodScore" >
+                    <span style={{marginRight:'1%', color:'green' }}> Верно:{this.numberOfGoodAnswers} </span>
+                    <span style={{marginRight:'1%', color:'red' }}> Ошибок:{this.numberOfBadAnswers}</span>
+                </h4>
 
             </div>
 
-         </div>
+
+        </div>
     }
    public _handleKeyPressTasksNumber = (e:any) => {
        if (e.key === 'Enter') {
-           console.log("Tasks Number: "+this.tasksNumberInput.value );
+           console.log("Tasks Number in Test: "+this.tasksNumberInput.value );
        }
    };
 
@@ -161,7 +164,7 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
             console.info("1 Enter");
             this.result = Number(this.operator1) * Number(this.operator2);
             let isCorrect:boolean = this.result == Number(this.textInput.value);
-            this.assesmentText = isCorrect ? 'GOOD - press Enter to continue' : 'BAD - correct your result';
+            this.assesmentText = isCorrect ? 'Верно - жми Enter чтобы продолжить' : 'ОШИБКА - исправляй!';
             this.numberTotalAnswers++;
             if(isCorrect) {
                 this.numberOfGoodAnswers++;
@@ -248,7 +251,7 @@ export class MultiplyTest extends React.Component<MultiPOCProps, any>{
         this.operator2 = String(this.getRandom2To9());
         this.textInput.value ='';
 
-        this.assesmentText = 'Type result and press Enter';
+        this.assesmentText = 'Напечатай результат и нажми Enter';
 
         this.textInput.focus();
 
